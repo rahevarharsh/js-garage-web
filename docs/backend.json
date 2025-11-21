@@ -1,0 +1,150 @@
+{
+  "entities": {
+    "Booking": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Booking",
+      "type": "object",
+      "description": "Represents a booking for JS Garaje services.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the booking entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the person making the booking."
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the person making the booking."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the person making the booking.",
+          "format": "email"
+        },
+        "preferredDateTime": {
+          "type": "string",
+          "description": "Preferred date and time for the booking.",
+          "format": "date-time"
+        },
+        "vehicleMake": {
+          "type": "string",
+          "description": "Make of the vehicle for the booking."
+        },
+        "vehicleModel": {
+          "type": "string",
+          "description": "Model of the vehicle for the booking."
+        },
+        "vehicleYear": {
+          "type": "number",
+          "description": "Year of the vehicle for the booking."
+        },
+        "issueModificationRequest": {
+          "type": "string",
+          "description": "Description of the issue or modification request."
+        },
+        "locationPreference": {
+          "type": "boolean",
+          "description": "Indicates if the customer wants the mechanic to come to their location."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the booking was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "phone",
+        "email",
+        "preferredDateTime",
+        "vehicleMake",
+        "vehicleModel",
+        "vehicleYear",
+        "issueModificationRequest",
+        "locationPreference",
+        "timestamp"
+      ]
+    },
+    "Review": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Review",
+      "type": "object",
+      "description": "Represents a customer review for JS Garaje.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the review entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the customer providing the review."
+        },
+        "rating": {
+          "type": "number",
+          "description": "Rating given by the customer (e.g., 1-5 stars)."
+        },
+        "testimonial": {
+          "type": "string",
+          "description": "Text of the customer testimonial."
+        },
+        "carType": {
+          "type": "string",
+          "description": "Type of car the customer owns."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "rating",
+        "testimonial",
+        "carType"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/bookings/{bookingId}",
+        "definition": {
+          "entityName": "Booking",
+          "schema": {
+            "$ref": "#/backend/entities/Booking"
+          },
+          "description": "Stores booking requests for JS Garaje services.",
+          "params": [
+            {
+              "name": "bookingId",
+              "description": "Unique identifier for the booking."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/reviews/{reviewId}",
+        "definition": {
+          "entityName": "Review",
+          "schema": {
+            "$ref": "#/backend/entities/Review"
+          },
+          "description": "Stores customer reviews for JS Garaje.",
+          "params": [
+            {
+              "name": "reviewId",
+              "description": "Unique identifier for the review."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to store bookings and reviews for JS Garaje. To ensure authorization independence and facilitate secure list operations, the following structure is recommended:\n\n1.  `/bookings/{bookingId}`: This collection stores all booking requests. It does not require any authorization fields because only authenticated admin users can read them. The structure supports QAPs since list operations are controlled by server-side logic. \n\n2.  `/reviews/{reviewId}`: This collection stores customer reviews. No authorization is needed for viewing reviews. The structure supports QAPs since listing reviews is public. Admin access is controlled server-side.\n\nThis structure avoids hierarchical authorization dependencies (`get()` calls in security rules), promoting atomic operations and easier debugging. All collections have a homogeneous security posture, simplifying the rules. This design prioritizes Authorization Independence, Clarity of Intent, and supports secure `list` operations (QAPs)."
+  }
+}

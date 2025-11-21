@@ -1,0 +1,93 @@
+/**
+ * Core Philosophy:
+ * This ruleset secures a public-facing website for an auto garage. The primary goal is to
+ * allow anyone to submit a booking request while ensuring that submitted data remains
+ * private and is only accessible by a backend process. Customer reviews are treated as
+ * public content, readable by everyone, but can only be created or modified through a
+ * trusted server environment to ensure moderation.
+ *
+ * Data Structure:
+ * The data model is flat and simple, consisting of two top-level collections:
+ * - /bookings: A collection where any site visitor can submit a booking request.
+ * - /reviews: A public, read-only collection of customer testimonials.
+ *
+ * Key Security Decisions:
+ * - Booking Privacy: The /bookings collection is configured as a secure "drop box." Any
+ *   authenticated session (including anonymous users) can write a new document, but no
+ *   client can ever read, update, or delete any booking information. This protects
+ *   customer PII.
+ * - Moderated Reviews: The /reviews collection is publicly readable by anyone, but all
+ *   client-side write operations (create, update, delete) are disabled. This enforces
+ *   a content moderation workflow where reviews are added by a backend admin process.
+ * - Anonymous Access: The rules accommodate the 'anonymous' authentication provider,
+ *   allowing new visitors without an account to have a valid authentication session,
+ *   which is sufficient to submit a booking.
+ *
+ * Denormalization for Authorization:
+ * This ruleset does not require denormalization as the access patterns are simple.
+ * Bookings are write-only, and reviews are public-read, eliminating the need for
+ * complex ownership checks or embedding roles on documents.
+ *
+ * Structural Segregation:
+ * The design naturally separates private write-only data (bookings) from public
+ * read-only data (reviews) into different top-level collections, which is a secure
+ * and performant pattern that simplifies the rules.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ------------------------------------------------------------------------
+    // Helper Functions
+    // ------------------------------------------------------------------------
+
+    /**
+     * Checks if the user has an active authentication session (including anonymous).
+     * This is the baseline security check for any operation that is not public.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Collection Rules
+    // ------------------------------------------------------------------------
+
+    /**
+     * @description Allows any authenticated user (including anonymous) to submit a new
+     *              booking but denies all read, update, and delete operations to protect
+     *              customer privacy.
+     * @path        /bookings/{bookingId}
+     * @allow       An anonymous visitor submits a new booking form. (op: create)
+     * @deny        Any user attempts to read a list of all bookings. (op: list)
+     * @principle   Implements a secure "drop box." Data can be submitted by clients but
+     *              cannot be viewed or altered, protecting it for backend processing.
+     */
+    match /bookings/{bookingId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if isSignedIn();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Allows public, unauthenticated read access to all customer reviews
+     *              but denies all write operations from the client to enforce moderation.
+     * @path        /reviews/{reviewId}
+     * @allow       A non-authenticated visitor reads a specific review. (op: get)
+     * @deny        Any user attempts to create a new review from the website. (op: create)
+     * @principle   Enforces a public, read-only data model. Content management (like
+     *              approving and posting new reviews) must be handled by a trusted
+     *              backend or admin panel.
+     */
+    match /reviews/{reviewId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}
