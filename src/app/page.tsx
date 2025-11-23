@@ -45,6 +45,7 @@ import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { collection, serverTimestamp } from 'firebase/firestore';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
+import { useEffect, useState } from 'react';
 
 const bookingFormSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters.'),
@@ -56,7 +57,7 @@ const bookingFormSchema = z.object({
   vehicleYear: z
     .number()
     .min(1900, 'Year must be after 1900.')
-    .max(new Date().getFullYear() + 1),
+    .max(new Date().getFullYear() + 1, 'Year cannot be in the distant future.'),
   issueModificationRequest: z
     .string()
     .min(10, 'Please describe the issue in at least 10 characters.'),
@@ -69,21 +70,33 @@ function BookingForm() {
     () => (firestore ? collection(firestore, 'bookings') : null),
     [firestore]
   );
+  
+  const [currentYear, setCurrentYear] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   const form = useForm<z.infer<typeof bookingFormSchema>>({
     resolver: zodResolver(bookingFormSchema),
-    defaultValues: {
-      name: '',
-      phone: '',
-      email: '',
-      preferredDateTime: '',
-      vehicleMake: '',
-      vehicleModel: '',
-      vehicleYear: new Date().getFullYear(),
-      issueModificationRequest: '',
-      locationPreference: false,
-    },
+    // We will set defaultValues once currentYear is available
   });
+
+  useEffect(() => {
+    if (currentYear !== undefined) {
+      form.reset({
+        name: '',
+        phone: '',
+        email: '',
+        preferredDateTime: '',
+        vehicleMake: '',
+        vehicleModel: '',
+        vehicleYear: currentYear,
+        issueModificationRequest: '',
+        locationPreference: false,
+      });
+    }
+  }, [currentYear, form]);
 
   function onSubmit(values: z.infer<typeof bookingFormSchema>) {
     if (!bookingsCollection) return;
@@ -93,6 +106,10 @@ function BookingForm() {
     };
     addDocumentNonBlocking(bookingsCollection, bookingData);
     form.reset();
+  }
+  
+  if (currentYear === undefined) {
+    return <p>Loading form...</p>;
   }
 
   return (
@@ -383,6 +400,12 @@ const galleryImages = [
 ];
 
 function JSGaragePage() {
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <div className="bg-neutral-900 text-white min-h-screen font-sans">
       <header className="sticky top-0 z-50 bg-neutral-900/80 backdrop-blur-sm">
@@ -623,7 +646,7 @@ function JSGaragePage() {
 
       <footer className="bg-neutral-950 border-t border-neutral-800 py-8">
         <div className="container mx-auto px-4 text-center text-neutral-400">
-          <p>&copy; {new Date().getFullYear()} JS Garage. All Rights Reserved.</p>
+          <p>&copy; {year} JS Garage. All Rights Reserved.</p>
         </div>
       </footer>
     </div>
