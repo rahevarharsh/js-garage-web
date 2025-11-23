@@ -70,33 +70,21 @@ function BookingForm() {
     () => (firestore ? collection(firestore, 'bookings') : null),
     [firestore]
   );
-  
-  const [currentYear, setCurrentYear] = useState<number | undefined>(undefined);
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
 
   const form = useForm<z.infer<typeof bookingFormSchema>>({
     resolver: zodResolver(bookingFormSchema),
-    // We will set defaultValues once currentYear is available
+    defaultValues: {
+      name: '',
+      phone: '',
+      email: '',
+      preferredDateTime: '',
+      vehicleMake: '',
+      vehicleModel: '',
+      vehicleYear: new Date().getFullYear(),
+      issueModificationRequest: '',
+      locationPreference: false,
+    },
   });
-
-  useEffect(() => {
-    if (currentYear !== undefined) {
-      form.reset({
-        name: '',
-        phone: '',
-        email: '',
-        preferredDateTime: '',
-        vehicleMake: '',
-        vehicleModel: '',
-        vehicleYear: currentYear,
-        issueModificationRequest: '',
-        locationPreference: false,
-      });
-    }
-  }, [currentYear, form]);
 
   function onSubmit(values: z.infer<typeof bookingFormSchema>) {
     if (!bookingsCollection) return;
@@ -106,10 +94,6 @@ function BookingForm() {
     };
     addDocumentNonBlocking(bookingsCollection, bookingData);
     form.reset();
-  }
-  
-  if (currentYear === undefined) {
-    return <p>Loading form...</p>;
   }
 
   return (
