@@ -614,7 +614,7 @@ function JSGaragePage() {
               </div>
               <div className="flex-1 w-full h-80 rounded-lg overflow-hidden border-2 border-orange-500">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.18105990234!2d73.854347!3d18.5204303!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c0e8f3349b99%3A0x5a1815e9b8676239!2sPune%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1678886420000"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.545!2d72.669056!3d23.015306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDAwJzU1LjEiTiA3MsKwNDAnMDguNiJF!5e0!3m2!1sen!2sin!4v1678886420000"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
