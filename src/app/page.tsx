@@ -70,6 +70,12 @@ function BookingForm() {
     () => (firestore ? collection(firestore, 'bookings') : null),
     [firestore]
   );
+  const [year, setYear] = useState(new Date().getFullYear());
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
 
   const form = useForm<z.infer<typeof bookingFormSchema>>({
     resolver: zodResolver(bookingFormSchema),
@@ -80,11 +86,25 @@ function BookingForm() {
       preferredDateTime: '',
       vehicleMake: '',
       vehicleModel: '',
-      vehicleYear: new Date().getFullYear(),
+      vehicleYear: year,
       issueModificationRequest: '',
       locationPreference: false,
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      name: '',
+      phone: '',
+      email: '',
+      preferredDateTime: '',
+      vehicleMake: '',
+      vehicleModel: '',
+      vehicleYear: year,
+      issueModificationRequest: '',
+      locationPreference: false,
+    });
+  }, [year, form]);
 
   function onSubmit(values: z.infer<typeof bookingFormSchema>) {
     if (!bookingsCollection) return;
@@ -391,8 +411,8 @@ function JSGaragePage() {
   }, []);
 
   return (
-    <div className="bg-neutral-900 text-white min-h-screen font-sans">
-      <header className="sticky top-0 z-50 bg-neutral-900/80 backdrop-blur-sm">
+    <div className="bg-black text-white min-h-screen font-sans">
+      <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-sm">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-2 text-sm text-neutral-400 border-b border-neutral-800">
             <div className="flex items-center gap-4">
