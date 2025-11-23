@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'JS Garage — Trusted Auto Repair & Custom Mods',
-  description: 'Expert car repairs, servicing, and custom modifications in your area. We offer on-site or at-garage service. Book your slot today!',
+  title: 'J.S. Car Service — Trusted Auto Repair & Custom Mods',
+  description: 'Expert car repairs, servicing, and custom modifications in Ahmedabad. We offer on-site or at-garage service. Book your slot today!',
 };
 
 export default function RootLayout({

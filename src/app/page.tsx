@@ -120,7 +120,7 @@ function BookingForm() {
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="+91 XXXX-XXXXXX" {...field} />
+                  <Input placeholder="e.g. 8238774296" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -324,23 +324,23 @@ function ReviewsCarousel() {
 const services = [
   {
     icon: Cog,
-    title: 'Engine Repair',
-    description: 'Expert diagnostics and repairs for all engine types.',
+    title: 'Mechanical & CNG Kit',
+    description: 'Expert diagnostics and repairs for all mechanical issues & CNG kit fittings.',
   },
   {
     icon: Car,
-    title: 'Brake Service',
-    description: 'Complete brake system inspection, repair, and replacement.',
+    title: 'Accident Work',
+    description: 'Complete bodywork and accident repair services.',
   },
   {
     icon: Wrench,
-    title: 'Custom Modifications',
-    description: 'Performance upgrades and aesthetic modifications.',
+    title: 'Electrical Work',
+    description: 'Advanced electrical diagnosis and repair.',
   },
   {
     icon: Gauge,
-    title: 'Diagnostics',
-    description: 'Advanced tools to diagnose and resolve complex issues.',
+    title: 'Breakdown Service',
+    description: 'On-site assistance for vehicle breakdowns.',
   },
 ];
 
@@ -397,11 +397,11 @@ function JSGaragePage() {
           <div className="flex justify-between items-center py-2 text-sm text-neutral-400 border-b border-neutral-800">
             <div className="flex items-center gap-4">
               <a
-                href="tel:+911234567890"
+                href="tel:8238774296"
                 className="flex items-center gap-2 hover:text-orange-500 transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                <span>+91 XXXX-XXXXXX</span>
+                <span>+91 8238774296</span>
               </a>
               <a
                 href="mailto:contact@jsgarage.com"
@@ -417,7 +417,7 @@ function JSGaragePage() {
               href="/"
               className="text-2xl font-bold text-white tracking-wider"
             >
-              JS <span className="text-orange-500">GARAGE</span>
+              J.S. <span className="text-orange-500">CAR SERVICE</span>
             </Link>
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
               <Link
@@ -577,12 +577,26 @@ function JSGaragePage() {
                     <Phone className="w-6 h-6 text-orange-500" />
                   </div>
                   <div>
-                    <h4 className="font-semibold">Phone</h4>
+                    <h4 className="font-semibold">Virendrasinh Rana</h4>
                     <a
-                      href="tel:+911234567890"
+                      href="tel:8238774296"
                       className="text-neutral-300 hover:text-orange-500 transition-colors"
                     >
-                      +91 XXXX-XXXXXX
+                      +91 8238774296
+                    </a>
+                  </div>
+                </div>
+                 <div className="flex items-center gap-4 text-xl">
+                  <div className="bg-orange-500/10 p-3 rounded-full">
+                    <Phone className="w-6 h-6 text-orange-500" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Niteshbhai</h4>
+                    <a
+                      href="tel:9724373656"
+                      className="text-neutral-300 hover:text-orange-500 transition-colors"
+                    >
+                      +91 9724373656
                     </a>
                   </div>
                 </div>
@@ -600,14 +614,16 @@ function JSGaragePage() {
                     </a>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 text-xl">
-                  <div className="bg-orange-500/10 p-3 rounded-full">
+                <div className="flex items-start gap-4 text-xl">
+                  <div className="bg-orange-500/10 p-3 rounded-full mt-1">
                     <MapPin className="w-6 h-6 text-orange-500" />
                   </div>
                   <div>
                     <h4 className="font-semibold">Address</h4>
                     <p className="text-neutral-300">
-                      123 Auto Lane, Mechanic Nagar, Pune, India
+                      Yamuna Park Society, Opp. Royal Hotel, 
+                      <br />
+                      S.P. Ring Road, Odhav, Ahmedabad - 15
                     </p>
                   </div>
                 </div>
@@ -630,7 +646,7 @@ function JSGaragePage() {
 
       <footer className="bg-neutral-950 border-t border-neutral-800 py-8">
         <div className="container mx-auto px-4 text-center text-neutral-400">
-          <p>&copy; {year} JS Garage. All Rights Reserved.</p>
+          <p>&copy; {year} J.S. Car Service. All Rights Reserved.</p>
         </div>
       </footer>
     </div>
