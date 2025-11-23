@@ -77,6 +77,11 @@ function BookingForm() {
     () => (firestore ? collection(firestore, 'bookings') : null),
     [firestore]
   );
+  const [defaultYear, setDefaultYear] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    setDefaultYear(new Date().getFullYear());
+  }, []);
   
   const form = useForm<z.infer<typeof bookingFormSchema>>({
     resolver: zodResolver(bookingFormSchema),
@@ -92,6 +97,23 @@ function BookingForm() {
       locationPreference: false,
     },
   });
+
+  useEffect(() => {
+    if (defaultYear) {
+      form.reset({
+        name: '',
+        phone: '',
+        email: '',
+        preferredDateTime: '',
+        vehicleMake: '',
+        vehicleModel: '',
+        vehicleYear: defaultYear,
+        issueModificationRequest: '',
+        locationPreference: false,
+      });
+    }
+  }, [defaultYear, form]);
+
 
   function onSubmit(values: z.infer<typeof bookingFormSchema>) {
     if (!bookingsCollection) return;
@@ -198,6 +220,7 @@ function BookingForm() {
                     type="number"
                     placeholder="e.g., 2022"
                     {...field}
+                    value={field.value || ''}
                     onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                   />
                 </FormControl>
@@ -698,7 +721,7 @@ function JSGaragePage() {
               </div>
               <div className="flex-1 w-full h-80 rounded-lg overflow-hidden border-2 border-orange-500">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.545035391546!2d72.66644287467721!3d23.04068591568283!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e8716ca54395b%3A0x629243cac5bb3695!2sJ.S.Car%20Service!5e0!3m2!1sen!2sin!4v1716382577663!5m2!1sen!2sin"
+                  src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3671.643231336155!2d72.6664719759353!3d23.03693991599879!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjPCsDAwJzU1LjEiTiA3MsKwNDAnMDguNiJF!5e0!3m2!1sen!2sin!4v1716382577663!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -728,3 +751,5 @@ export default function Home() {
     </FirebaseClientProvider>
   );
 }
+
+    
