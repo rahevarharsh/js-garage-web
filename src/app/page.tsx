@@ -28,6 +28,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+} from '@/components/ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Car,
@@ -38,6 +44,7 @@ import {
   Mail,
   MapPin,
   Star,
+  Menu,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -70,13 +77,7 @@ function BookingForm() {
     () => (firestore ? collection(firestore, 'bookings') : null),
     [firestore]
   );
-  const [year, setYear] = useState(new Date().getFullYear());
-
-  useEffect(() => {
-    setYear(new Date().getFullYear());
-  }, []);
-
-
+  
   const form = useForm<z.infer<typeof bookingFormSchema>>({
     resolver: zodResolver(bookingFormSchema),
     defaultValues: {
@@ -86,25 +87,11 @@ function BookingForm() {
       preferredDateTime: '',
       vehicleMake: '',
       vehicleModel: '',
-      vehicleYear: year,
+      vehicleYear: new Date().getFullYear(),
       issueModificationRequest: '',
       locationPreference: false,
     },
   });
-
-  useEffect(() => {
-    form.reset({
-      name: '',
-      phone: '',
-      email: '',
-      preferredDateTime: '',
-      vehicleMake: '',
-      vehicleModel: '',
-      vehicleYear: year,
-      issueModificationRequest: '',
-      locationPreference: false,
-    });
-  }, [year, form]);
 
   function onSubmit(values: z.infer<typeof bookingFormSchema>) {
     if (!bookingsCollection) return;
@@ -211,7 +198,7 @@ function BookingForm() {
                     type="number"
                     placeholder="e.g., 2022"
                     {...field}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -471,9 +458,70 @@ function JSGaragePage() {
                 Book Now
               </Link>
             </nav>
-            <Button className="md:hidden" variant="outline" size="icon">
-              <Car className="w-6 h-6" />
-            </Button>
+            <div className="md:hidden">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <Menu className="w-6 h-6" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent
+                  side="left"
+                  className="bg-black border-neutral-800 text-white"
+                >
+                  <div className="flex flex-col gap-6 p-6">
+                    <Link
+                      href="/"
+                      className="text-2xl font-bold text-white tracking-wider"
+                    >
+                      J.S. <span className="text-orange-500">CAR SERVICE</span>
+                    </Link>
+                    <nav className="flex flex-col gap-4 text-lg font-medium">
+                      <SheetClose asChild>
+                        <Link
+                          href="#home"
+                          className="hover:text-orange-500 transition-colors"
+                        >
+                          Home
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          href="#services"
+                          className="hover:text-orange-500 transition-colors"
+                        >
+                          Services
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          href="#our-work"
+                          className="hover:text-orange-500 transition-colors"
+                        >
+                          Our Work
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          href="#contact"
+                          className="hover:text-orange-500 transition-colors"
+                        >
+                          Contact
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          href="#book-now"
+                          className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors text-center"
+                        >
+                          Book Now
+                        </Link>
+                      </SheetClose>
+                    </nav>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </header>
@@ -497,7 +545,7 @@ function JSGaragePage() {
               Expert Car Repairs & Mods
               <br />
               <span className="text-orange-500">
-                On-Site or At Your Garage
+                On-Site or At Our Garage
               </span>
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-neutral-300 mb-8">
@@ -650,7 +698,7 @@ function JSGaragePage() {
               </div>
               <div className="flex-1 w-full h-80 rounded-lg overflow-hidden border-2 border-orange-500">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.545!2d72.669056!3d23.015306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDAwJzU1LjEiTiA3MsKwNDAnMDguNiJF!5e0!3m2!1sen!2sin!4v1678886420000"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.545035391546!2d72.66644287467721!3d23.04068591568283!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e8716ca54395b%3A0x629243cac5bb3695!2sJ.S.Car%20Service!5e0!3m2!1sen!2sin!4v1716382577663!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
